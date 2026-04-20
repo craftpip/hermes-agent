@@ -1349,6 +1349,7 @@ class TelegramAdapter(BasePlatformAdapter):
         finalize: bool = False,
     ) -> SendResult:
         """Edit a previously sent Telegram message."""
+        # NOTE: finalize param accepted for API compatibility but not used for Telegram
         if not self._bot:
             return SendResult(success=False, error="Not connected")
         try:

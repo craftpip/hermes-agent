@@ -922,6 +922,8 @@ def load_gateway_config() -> GatewayConfig:
                         plat_data = {}
                         platforms_data[Platform.TELEGRAM.value] = plat_data
                     extra = plat_data.setdefault("extra", {})
+                if "reply_to_mode" in telegram_cfg and not os.getenv("TELEGRAM_REPLY_TO_MODE"):
+                    os.environ["TELEGRAM_REPLY_TO_MODE"] = str(telegram_cfg["reply_to_mode"]).lower()
                     if not isinstance(extra, dict):
                         extra = {}
                         plat_data["extra"] = extra
