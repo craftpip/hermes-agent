@@ -336,10 +336,13 @@ class BaseEnvironment(ABC):
         """
         # Full capture: env vars, functions (filtered), aliases, shell options.
         # Restore configured cwd after login shell profile scripts, which may
-        # change the working directory (e.g. bashrc `cd ~`).  Without this,
+        # change the working directory (e.g. bashrc ). Without this,
         # pwd -P captures the profile's directory, not terminal.cwd.
-        _quoted_cwd = shlex.quote(self.cwd)
+        quoted_cwd = (
+            shlex.quote(self.cwd) if self.cwd != ~ and not self.cwd.startswith(~/) else self.cwd
+        )
         bootstrap = (
+            f"cd {quoted_cwd} || exit 126\n"
             f"export -p > {self._snapshot_path}\n"
             f"declare -f | grep -vE '^_[^_]' >> {self._snapshot_path}\n"
             f"alias -p >> {self._snapshot_path}\n"
